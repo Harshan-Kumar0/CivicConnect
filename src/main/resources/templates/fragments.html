@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- ✅ NAVBAR FRAGMENT -->
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">🌆 CivicConnect</a>
+
+            <div class="d-flex align-items-center">
+                <!--<a href="/" class="btn btn-outline-light btn-sm me-2">Home</a>-->
+               <!-- <a href="/view" class="btn btn-outline-light btn-sm me-2">Citizen View</a> -->
+                <a href="/login" class="btn btn-outline-light btn-sm me-2">Admin</a>
+                <a href="/admin/stats" class="btn btn-outline-light btn-sm me-2">Stats</a>
+                <a href="/admin/map" class="btn btn-outline-light btn-sm me-3">Map</a>
+
+                <!-- 🌐 Language Dropdown -->
+                <div id="google_translate_element" style="min-width: 150px;"></div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<!-- ✅ Google Translate Script -->
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+            {
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ta,te,ml,bn,gu,kn,fr,es', // Add or remove languages here
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            },
+            'google_translate_element'
+        );
+    }
+</script>
+<script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- ✅ Styling -->
+<style>
+    /* Hide the Google top banner */
+    .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+    }
+    body {
+        top: 0px !important;
+    }
+
+    /* Dropdown appearance inside navbar */
+    #google_translate_element select {
+        background-color: #F3E2D4;
+        color: black;
+        border: 1px solid #6c757d;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    #google_translate_element select:focus {
+        outline: none;
+        box-shadow: 0 0 4px #0d6efd;
+    }
+</style>
+</body>
+</html>

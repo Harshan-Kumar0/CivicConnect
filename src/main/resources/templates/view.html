@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Complaints - CivicConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --peach: #F3E2D4;
+            --mauve: #C5B0CD;
+            --steel: #415E72;
+            --midnight: #17313E;
+            --bg-cream: #FBF8F3;
+            --card-white: #FFFFFF;
+        }
+
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--midnight);
+            background: linear-gradient(135deg, #FBF8F3 0%, #F8F3EE 50%, #FBF6F0 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 🌈 Floating Gradient Blobs */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none; /* ✅ prevents blocking clicks */
+        }
+
+        .gradient-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.4;
+            animation: blobMove 20s ease-in-out infinite;
+            pointer-events: none; /* ✅ prevents interaction */
+        }
+
+        .blob-1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(197,176,205,0.5), transparent 70%);
+            top: -10%; right: 5%;
+        }
+
+        .blob-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(243,226,212,0.6), transparent 70%);
+            bottom: -10%; left: -10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes blobMove {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(40px,-40px) scale(1.1); }
+        }
+
+        /* 📋 Title */
+        h2 {
+            font-weight: 800;
+            text-align: center;
+            font-size: 2.3rem;
+            background: linear-gradient(135deg, var(--steel), var(--mauve), var(--steel));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2.5rem;
+            animation: fadeDown 1s ease;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 📄 Table Card */
+        .table-card {
+            background: var(--card-white);
+            border: 2px solid rgba(197,176,205,0.15);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 30px 80px rgba(197,176,205,0.25);
+            animation: fadeUp 1.2s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 📊 Table */
+        .table {
+            background: var(--card-white);
+            border-radius: 16px;
+            overflow: hidden;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            color: var(--midnight);
+            box-shadow: 0 10px 25px rgba(197,176,205,0.2);
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--mauve), var(--steel));
+            color: white;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 1rem;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(197,176,205,0.08);
+            transform: scale(1.005);
+        }
+
+        .text-success { color: #3CB371 !important; }
+        .text-warning { color: #E67E22 !important; }
+
+        /* 🏠 Back Button */
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(197,176,205,0.3), rgba(243,226,212,0.5));
+            border: none;
+            border-radius: 16px;
+            color: var(--steel);
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            background: rgba(197,176,205,0.6);
+            box-shadow: 0 10px 25px rgba(197,176,205,0.3);
+        }
+
+        @media (max-width: 768px) {
+            h2 { font-size: 1.8rem; }
+            .table th, .table td { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+
+<body>
+<!-- 🌈 Background Blobs -->
+<div class="bg-layer">
+    <div class="gradient-blob blob-1"></div>
+    <div class="gradient-blob blob-2"></div>
+</div>
+
+<!-- 🌐 Navbar -->
+<div th:replace="fragments :: navbar"></div>
+
+<!-- 📋 Complaints Table -->
+<div class="container mt-5 mb-5">
+    <h2>📋 All Complaints</h2>
+
+    <div class="table-card shadow-sm">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Citizen</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${complaints}">
+                    <td th:text="${c.id}"></td>
+                    <td th:text="${c.citizenName}"></td>
+                    <td th:text="${c.category}"></td>
+                    <td th:text="${c.description}"></td>
+                    <td>
+                        <span th:text="${c.status}"
+                              th:classappend="${c.status == 'Resolved'} ? 'text-success fw-bold' : 'text-warning fw-bold'">
+                        </span>
+                    </td>
+                    <td th:text="${#temporals.format(c.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <!-- ✅ Fixed Back Button -->
+            <a href="/index" th:href="@{/index}" class="btn btn-secondary" role="button">🏠 Back</a>
+        </div>
+    </div>
+</div>
+
+<!-- 🌍 Google Translate -->
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+            {
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ta,te,ml,bn,gu,kn,fr,es',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            },
+            'google_translate_element'
+        );
+    }
+
+    window.addEventListener('load', function () {
+        var gt = document.createElement('script');
+        gt.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        document.body.appendChild(gt);
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

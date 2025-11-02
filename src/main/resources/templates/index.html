@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{app.title}">CivicConnect Portal</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --peach: #F3E2D4;
+            --mauve: #C5B0CD;
+            --steel: #415E72;
+            --midnight: #17313E;
+            --bg-cream: #FBF8F3;
+            --card-white: #FFFFFF;
+        }
+
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--midnight);
+            background: linear-gradient(135deg, #FBF8F3 0%, #F8F3EE 50%, #FBF6F0 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 🌈 Floating Blobs */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.4;
+            animation: blobMove 20s ease-in-out infinite;
+        }
+        .blob-1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(197,176,205,0.5), transparent 70%);
+            top: -10%; right: 5%;
+        }
+        .blob-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(243,226,212,0.6), transparent 70%);
+            bottom: -10%; left: -10%;
+            animation-delay: -10s;
+        }
+        @keyframes blobMove {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(40px,-40px) scale(1.1); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-weight: 800;
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--steel), var(--mauve));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+            animation: fadeDown 1s ease;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-card {
+            background: var(--card-white);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 30px 80px rgba(197,176,205,0.25);
+            border: 2px solid rgba(197,176,205,0.15);
+            animation: fadeUp 1.2s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--steel);
+        }
+
+        .form-control,
+        .form-select,
+        textarea {
+            background: rgba(251, 248, 243, 0.9);
+            border: 2px solid rgba(197,176,205,0.25);
+            border-radius: 18px;
+            transition: all 0.3s ease;
+            padding: 0.9rem 1.2rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: var(--mauve);
+            box-shadow: 0 0 0 6px rgba(197,176,205,0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--mauve), var(--steel));
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-weight: 700;
+            padding: 0.8rem 2.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(197,176,205,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(197,176,205,0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--mauve), var(--peach));
+            border: none;
+            border-radius: 18px;
+            color: var(--midnight);
+            font-weight: 700;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(197,176,205,0.25);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(197,176,205,0.45);
+        }
+
+        .btn-dark {
+            background: linear-gradient(135deg, rgba(197,176,205,0.25), rgba(243,226,212,0.35));
+            color: var(--steel);
+            border: none;
+            border-radius: 18px;
+            font-weight: 700;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-dark:hover {
+            background: rgba(197,176,205,0.5);
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dashed rgba(197,176,205,0.25);
+            margin: 2rem 0;
+        }
+
+        .success-alert {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-left: 6px solid var(--mauve);
+            padding: 1.2rem 1.8rem;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(197,176,205,0.35);
+            font-weight: 600;
+            color: var(--steel);
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* small responsive tweaks */
+        @media (max-width: 768px) {
+            .main-container { padding: 2rem 1rem; }
+            .form-card { padding: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Background Blobs -->
+<div class="bg-layer">
+    <div class="gradient-blob blob-1"></div>
+    <div class="gradient-blob blob-2"></div>
+</div>
+
+<!-- Navbar fragment (keeps the translate dropdown if your fragment includes it) -->
+<div th:replace="fragments :: navbar"></div>
+
+<!-- ✅ Success Alert -->
+<div id="successAlert" class="success-alert">
+    ✅ Complaint submitted successfully! Check your email for your Ticket ID.
+</div>
+
+<div class="main-container">
+    <h2>🧾 CivicConnect – Citizen Feedback Portal</h2>
+
+    <!-- ✅ Complaint Form -->
+    <form th:action="@{/submit}" method="post" class="form-card mb-5">
+        <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-control" name="citizenName" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" name="citizenEmail" placeholder="Enter your email for updates" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option>🛣️ Road Maintenance</option>
+                <option>🗑️ Garbage Management</option>
+                <option>💧 Water Supply</option>
+                <option>💡 Street Lighting</option>
+                <option>🚓 Public Safety</option>
+                <option>🏥 Health & Sanitation</option>
+                <option>🚌 Transportation</option>
+                <option>📄 Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="description" placeholder="Describe your issue..." required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Location (Latitude, Longitude)</label>
+            <div class="d-flex gap-2 flex-wrap">
+                <input type="text" class="form-control" name="latitude" placeholder="e.g. 12.9716">
+                <input type="text" class="form-control" name="longitude" placeholder="e.g. 77.5946">
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5">Submit Complaint</button>
+        </div>
+    </form>
+
+    <!-- ✅ Track Complaint Section -->
+    <div class="form-card mt-5">
+        <h4 class="text-center mb-3">🎫 Track Your Complaint</h4>
+        <form id="trackForm" class="d-flex gap-2 flex-wrap justify-content-center">
+            <input type="text" class="form-control flex-grow-1" id="ticketIdInput" placeholder="Enter Ticket ID (e.g. CC-1730549213439)" required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div id="trackResult" class="mt-4 text-center"></div>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+        <a href="/view" class="btn btn-success">View Complaints</a>
+    </div>
+</div>
+
+<!-- ========== Scripts ========== -->
+
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ✅ Success alert after form submission
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "true") {
+        const alert = document.getElementById("successAlert");
+        alert.style.display = "block";
+        setTimeout(() => {
+            alert.style.opacity = "0";
+            alert.style.transition = "opacity 1s";
+        }, 3500);
+        setTimeout(() => alert.remove(), 4500);
+    }
+
+    // 🎫 Track Complaint by Ticket ID
+    document.getElementById('trackForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const ticketId = document.getElementById('ticketIdInput').value.trim();
+        const resultDiv = document.getElementById('trackResult');
+        resultDiv.innerHTML = '<div class="text-muted">🔍 Searching...</div>';
+
+        try {
+            const response = await fetch(`/api/complaints/ticket/${encodeURIComponent(ticketId)}`);
+            if (!response.ok) throw new Error('Not found');
+            const data = await response.json();
+            resultDiv.innerHTML = `
+                <div class="alert alert-success p-3 rounded">
+                    <h5>✅ Complaint Found</h5>
+                    <p><b>Ticket ID:</b> ${data.ticketId}</p>
+                    <p><b>Status:</b> ${data.status}</p>
+                    <p><b>Category:</b> ${data.category}</p>
+                </div>`;
+        } catch (err) {
+            resultDiv.innerHTML = `<div class="alert alert-danger">❌ No complaint found with that Ticket ID.</div>`;
+        }
+    });
+</script>
+
+<!-- ========== Google Translate Loader (fixed) ========== -->
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+            {
+                pageLanguage: 'en',
+                includedLanguages: 'en,hi,ta,te,ml,bn,gu,kn,fr,es',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            },
+            'google_translate_element'
+        );
+    }
+
+    // Load the Google Translate script after page loads (non-blocking)
+    window.addEventListener('load', function () {
+        var gt = document.createElement('script');
+        gt.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        document.body.appendChild(gt);
+    });
+</script>
+
+</body>
+</html>
